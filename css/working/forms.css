@@ -1,0 +1,125 @@
+.outerdiv {/* this for rally old IE ;  do not merge  with the other .outerdiv declaration!!*/
+	display: inline;
+	zoom: 1;
+}
+.outerdiv {
+	border: 0px solid blue;
+	display: -moz-inline-box;
+	display: inline-block;
+	max-width: fit-content;
+}
+/* Global parameters */
+.header {
+	width: 50px;
+}
+.table_title {
+	height: 50px;
+	margin-right: 10px;
+}
+.plusTd {
+	/*position: relative;
+	 width: 1vw;
+	 overflow: hidden;*/
+	background: url(../../img/plus.png) center center no-repeat, rgba(0, 0, 0, 0.1);
+}
+.minusTd {
+	/*position: relative;
+	 width: 1vw;
+	 overflow: hidden;*/
+	background: url(../../img/plus.png) center center no-repeat, rgba(0, 0, 0, 0.1);
+}
+.button {
+	text-align: center;
+	cursor: pointer;
+}
+.table_header {
+	background-color: #615450;
+}
+.table_titaleBG {
+	background-color: #bfa99f;
+}
+.table_dataBGa {
+	background-color: #f2f2f2;
+}
+.table_dataBGb {
+	background-color: #ede9e1;
+}
+.table_ffs {
+	font-size: 26px;
+}
+
+table+ table {
+	margin-left: 0;
+}
+
+/* Task Table CSS */
+table.task_table {
+	margin: 15px 5px 5px 5px;
+	border-collapse: collapse;
+	border: 0px solid Black;
+	column-width: Auto;
+	-webkit-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	box-shadow: 5px 5px 3px rgba(50, 50, 50, 0.75);
+}
+table.task_table th {
+	border: 0px solid Black;
+	padding: 8px;
+	font-weight: bold;
+	color: #ffffff;
+}
+table.task_table td {
+	border: 0px solid Black;
+	padding: 8px;
+	text-align: justify;
+}
+table.task_table tr:hover td {
+	background-color: #e6d7bf;
+}
+/* Clients Table CSS */
+table.clients_table {
+	float: right;
+	margin: 15px 5px 5px 5px;
+	border-collapse: collapse;
+	border: 0px solid Black;
+	column-width: Auto;
+	-webkit-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	box-shadow: 5px 5px 3px rgba(50, 50, 50, 0.75);
+}
+table.clients_table th {
+	border: 0px solid Black;
+	padding: 8px;
+	text-align: justify;
+}
+table.clients_table td {
+	border: 0px solid Black;
+	padding: 8px;
+	text-align: justify;
+}
+/* Storage Table CSS */
+table.storage_table {
+	border-collapse: collapse;
+	border: 0px solid Black;
+	column-width: Auto;
+	float: left;
+	margin: 5px 5px 15px 5px;
+	-webkit-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+	box-shadow: 5px 5px 3px rgba(50, 50, 50, 0.75);
+}
+table.storage_table th {
+	border: 0px solid Black;
+	padding: 8px;
+	text-align: justify;/*
+	 border: 0px solid Black;
+	 padding: 8px;
+	 font-weight: bold;
+	 color: #ffffff;*/
+}
+table.storage_table td {
+	border: 0px solid Black;
+	padding: 8px;
+	/*background-color: #ffffff; */
+	text-align: justify;
+}

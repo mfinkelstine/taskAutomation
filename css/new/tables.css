@@ -1,0 +1,98 @@
+.flat_table {
+
+}
+.flatTable {
+  width: 80%; 
+  margin-top:20px;
+  margin-left:auto;
+  margin-right:auto;
+  min-width: 600px;
+  border-collapse: collapse;
+  font-weight: bold;
+  color: #6b6b6b;
+  -webkit-box-shadow: 5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+  -moz-box-shadow:    5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+  box-shadow:         5px 5px 3px 0px rgba(50, 50, 50, 0.75);
+  
+}
+                      
+.flatTable tr {
+  height: 40px;
+  background: #d4d1d5;
+  border-bottom: rgba(0, 0, 0, 0.05) 1px solid; 
+}
+.flatTable th {
+  font-size: 16px;
+}
+
+tr:hover td {
+  -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+}
+tr:hover td:first-child {
+  -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+}
+tr:hover td:last-child {
+  -moz-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.8);
+}
+tr:hover td:after {
+   content: "";
+   width: 3px;
+   height: 100%;
+   background-color: #F5F8FB;
+   position: absolute;
+   right: 0;
+   top: 0;
+   z-index: 1;
+}
+
+.flatTable  td{
+  box-sizing: border-box;
+  padding-left: 30px;
+
+}
+                  
+.flatTable .td2 {
+  box-sizing: border-box;
+  color: black;
+  padding-left: 30px;                
+}
+  
+.flatTable .titleTr {
+  height: 70px;
+  color: #f6f3f7;
+  background: #418a95;
+  border: 0px solid;
+}
+.flatTable .plusTd {
+  background: url(../../img/3hSkhay.png) center center no-repeat, rgba(0, 0, 0, 0.1);
+}
+.flatTable .minusTd{ 
+  background: url(../../img/delete30.png) center center no-repeat, rgba(0, 0, 0, 0.1);
+}
+
+.flatTable .controlTd {
+  position: relative;
+  width: 80px;
+  background: url(../../img/9Q5f6cv.png) center center no-repeat;
+  cursor: pointer;
+}
+
+.flatTable .headingTr {                                             
+  height: 30px;
+  background: #63acb7;
+  color: #f6f3f7;
+  font-size: 8pt;
+  border: 0px solid; 
+}
+.flatTable .flotleft {
+  float: left; 
+}
+.flatTable .flotright {
+  float: right;
+}

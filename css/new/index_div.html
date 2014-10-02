@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang='en'>
+<head>
+<meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
+<title>Untitled</title>
+<style type="text/css">
+body {
+   margin: 0;
+   padding: 0;
+}
+#container {
+   margin: 2%;
+   padding: 0;
+   width: 97%;
+   background-color: #fc9;
+}
+#tasks {
+   float: left;
+   width: 96%;
+   margin: 1% 0 0.1% 1%;
+   padding: 1%;
+   background-color: #9cf;
+}
+#left, #right {
+   float: left;
+   width: 46.5%;
+   margin: 1% 0 1% 1%;
+   padding: 1%;
+   background-color: #9cf;
+   color: #000;
+}
+#right {
+   float: right;
+   margin: 1% 1% 1% 0;
+}
+.clear {
+   height: 0;
+   font-size: 1px;
+   margin: 0;
+   padding: 0;
+   line-height: 0;
+   clear: both;
+}
+
+</style>
+</head>
+<body>
+ <div id="container">
+  <div id="tasks"> 
+	<p>Left div content goes here.</p>
+	<table id="task_list" class="flatTable">
+    <tr class="titleTr">
+      <td class="titleTd" colspan="9" >Running Tasks</td>
+      <td class="plusTd button" id="addTask"></td>
+    </tr>
+    <tr class="headingTr">
+      <td >ID</td>
+      <td>DATE ISSUED</td>
+      <td>Storage Name</td>
+      <td>SVC Version/Build</td>
+      <td>Race Build</td>
+      <td>Backend</td>
+      <td>Clients</td>
+      <td>Test Running</td>
+      <td>Task Status</td>
+      <td>Used By</td>
+    </tr>
+  
+    <tr>
+      <td>0</td>
+      <td>19-10-2013</td>
+      <td>RTSVC15</td>
+      <td>7.4.0.0 99.8.1407060000</td>
+      <td>3.1.3.15</td>
+      <td>XIV01</td>
+      <td>MC001,MC014,MC021,MC022</td>
+      <td>CSOP</td>
+      <td>ACTIVE</td>
+      <td>meirfi</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>19-10-2013</td>
+      <td>RTSVC15</td>
+      <td>7.4.0.0 99.8.1407060000</td>
+      <td>3.1.3.15</td>
+      <td>XIV01</td>
+      <td>MC001,MC014,MC021,MC022</td>
+      <td>CSOP</td>
+      <td>ACTIVE</td>
+      <td>meirfi</td>
+    </tr>
+  </table>
+  </div>
+  <div id="left">
+   <p>Left div content goes here.</p>
+   <table id="clients_list" class="flatTable">
+      <tr class="titleTr ">
+        <td class="titleTd ftWidth10" colspan="3" >Clients Not in Use</td>
+	<td class="plusTd button" id="addClient"></td>
+      </tr>
+	<tr class="headingTr">
+  	  <td class="ftWidth10" >ID</td>
+	  <td >Client Name</td>
+	  <td>Status</td>
+	  <td></td>
+	</tr>
+    </table>
+  </div><!-- left -->
+  <div id="right">
+   <p>Right div content goes here.</p>
+   <table id="storage_list" class="flatTable">
+      <tr class="titleTr">
+        <td class="titleTd" colspan="3">Storage List Not in Use</td>
+        <td class="plusTd button" id="addStorage"></td>
+      </tr>
+      <tr class="headingTr">
+        <td>ID</td>
+        <td>Storage Name</td>
+	<td>Status</td>
+        <td></td>
+      </tr>
+    </table>
+  </div><!-- right -->
+  <div class="clear"></div>
+ </div><!-- container -->
+</body>
+</html>

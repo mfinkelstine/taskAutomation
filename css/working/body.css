@@ -1,0 +1,10 @@
+body {
+	text-align: center;
+	background-image: url("../../img/bg_body.png");
+	color: #000;
+	color: #333333;
+	font-family: "Century Gothic", CenturyGothic, Geneva, AppleGothic, sans-serif;
+	vertical-align: top;
+	margin: 0;
+	padding: 0;
+}

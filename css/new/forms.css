@@ -1,0 +1,99 @@
+/* input[type=text] {
+  padding: 5px;
+  width: 180px;
+  height: 35px;
+  border:1px solid gray;
+  margin:10px 0;
+//  border-radius:3px;
+  font-family: 'Droid Serif', serif;
+}*/
+input[type=text], textarea {
+  -webkit-transition: all 0.30s ease-in-out;
+     -moz-transition: all 0.30s ease-in-out;
+      -ms-transition: all 0.30s ease-in-out;
+       -o-transition: all 0.30s ease-in-out;
+  outline: none;
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid #DDDDDD;
+}
+                 
+input[type=text]:focus, textarea:focus {
+  box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid rgba(81, 203, 238, 1);
+}
+
+input[type=submit],input[type=reset]{
+  background-color:#781149;
+  color:white;
+  border-radius:5px;
+  padding:0;
+  width:200px;
+  height:35px;
+  border:2px solid white;
+  font-size:16px;
+  font-family: 'Droid Serif', serif;
+  text-align:center;
+}
+input[type=submit]:hover{
+   background-color:orange;
+   cursor:pointer;
+}
+input[type=reset]:hover{
+   background-color:orange;
+   cursor:pointer;
+}
+/*#addTask_form label, #addTask_form input {
+  display: inline-block;
+}
+#addTask_form label{ 
+  width: 200px;
+}*/
+#addTask_form,
+#addClient_form,
+#addStorage_form {
+  width: 550px;
+  display:none;
+  height:auto;
+  border:1px solid gray;
+  padding:20px;
+  background-color:#FDE2E2;
+  border-radius:5px;
+  margin-left:140px;
+  box-shadow: 0 0 8px gray;
+}
+#addStorage_form_data div, #addClient_form_data div, #addTask_form_data div, #addBackend_form_data div{
+  display: inline-block;
+  margin-left: 20px;
+  color: #6b6b6b;
+ // background: #d4d1d5;
+  border-bottom: rgba(0, 0, 0, 0.05) 1px solid;
+  width: 170px; 
+  border: 0px solid black;
+
+}
+#addStorage_form select , #addTask_form select, #addClient_form select {
+  width: 150px;
+}
+#dataResults {
+  display: inline-block;
+  margin-left: 20px;
+  color: #6b6b6b;
+  padding:20px;
+  background-color:#FDE2E2;
+  border-bottom: rgba(0, 0, 0, 0.05) 1px solid;
+  width: auto; 
+}
+/*form { 
+  
+  padding-left: 20px;
+  background-color:#FDE2E2;
+  border: 0px solid black;
+  border-bottom: rgba(0, 0, 0, 0.05) 1px solid;
+}
+form div {
+  display: inline-block;
+  width: 130px;
+}*/
