@@ -1,15 +1,11 @@
 <?php
 
-#include 'dbconnect.php';
-//include('MyLogPHP.class.php');
-include('logger.class.php');
-#include_once 'kLogger.php';
-#$logger = new kLogger('/var/log/', LogLevel::WARNING);
-#$logger->error('Uh Oh!'); // Will be logged
-#$logger->info('Something Happened Here'); // Will be NOT logged
-#$logger = new Logger();
-#$logger->info('This message will be logged in the file debug.log.csv','TIP');
-#$log->info('This message will be logged in the file debug.log.csv','TIP');
+#require_once '../includes/Logger.class';
+#include_once('includes/' . $class . '.class.php');
+
+#$logger = new Logger("/tmp/taskAutomation/","taskAutomation");
+#echo $logger;
+#$logger->info("this is a test);
 
 function tab($tab) {
 	for ($i = 0; $i <= $tab; $i++) {
@@ -33,8 +29,14 @@ function nbsp($count) {
 }
 function logFileWrite($type,$data){  #INFO/WARNING/DEBUG Test dead
 
-  $filename = "/tmp/autoTA.log";
-
+  $filename = "/tmp/AT/autoTA.log";
+  
+  if (!file_exists($filename)) {
+    $fp = fopen($filename,"w"); 
+    fwrite($fp,"0"); 
+    fclose($fp);   
+  } 
+  
   if (is_writeable($filename)) {
   	if (!$handle = fopen($filename , 'a')) {
   		echo "Cannot Open File ($filename)";
@@ -43,42 +45,49 @@ function logFileWrite($type,$data){  #INFO/WARNING/DEBUG Test dead
 	$nowTime = date("Y-m-d H:i:sa");
 	$tt = "[ ".$nowTime." ] [ ".$type." ] ";
   	if (fwrite($handle, $tt." ".$data)=== FALSE ) {
-	  	echo "Cannot Write to ($filenanme)";
+	  	#$logger->error('Cannot Write to (',$filenanme,')');
 	  	exit;
   	}
 
   }
 
 }
+function selStorageByType($stgName) {
+
+  $queryStorageType =  "    SELECT StorageType.type ";
+  $queryStorageType .= "      FROM automation.Storage Storage ";
+  $queryStorageType .= "INNER JOIN automation.StorageType StorageType ON (Storage.type = StorageType.id)";
+  $queryStorageType .= "     WHERE (Storage.name = \"".$stgName."\")";
+  $result = mysql_query($queryStorageType) or die("Error in the query " . $queryStorageType. " <br>" . mysql_error());
+
+        print "<label style=\"color:white;\">Storage Name STGbyTYPE: <b style=\"color:red;\">".$stgName."</b></label><br>";
+  #while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
+  $stgType = mysql_fetch_array($result, MYSQL_ASSOC) ;
+  
+        print "<label style=\"color:white;\">Storage Name : <b style=\"color:red;\">".$stgType['type']."</b></label><br>";
+  #}
+  return $stgType['type'];
+}
 
 function selActive($table) {
         $storageResults = array();
+        #$logger->info($table);
 	if ( $table == "Storage")  {
 		$sqlQ = "SELECT id,name FROM " . $table . " WHERE active   = 0";
 		$resSTGName = mysql_query($sqlQ) or die("Error in the query " . $sqlQ . " <br>" . mysql_error());
 		while ($r = mysql_fetch_array($resSTGName)) {
-                    logFileWrite("INFO",$r);
-                    //$log->info($r,"selActive");
-                    //print "<label style=\"color:white;\">Storage Name <b style=\"color:red;\">".$r['name']."</b></label><br>";
+  #                $logger->info($r);
 			$data = getStorageInfo($r);
-			//$data = getStorageInfo($r['name']);
                         array_push($storageResults, $data);
 		}
-                //print "<label> " . var_dump($storageResults)."</label>";
-                logFileWrite("INFO",$storageResults);
+  #              $logger->info($storageResults);
                 $data = json_encode($storageResults);
                 return $data;
-#                print "<label> " . var_dump($data)."</label>";
-	        //$data = getjsonfromSqlArray($sqlQ, MYSQLI_ASSOC);
 	} else {
 		$sqlQ = "SELECT * FROM " . $table . " WHERE active   = 0";
 	        $data = getjsonfromSqlArray($sqlQ, MYSQLI_ASSOC);
 	    return $data;
 	}
-	//$QueryActive = "SELECT id,name FROM ".$table." WHERE active   = 0";
-	//if ( $table == "storage") {
-	//}
-
 }
 function selTestType() {
 	$QueryType = "SELECT id,name FROM TestType ";
@@ -111,8 +120,6 @@ function selActiveTaskClients($ids) {
 		}
 		$count++;
 	}
-	#$name = trim($clis_name);
-	#$cli_name = str_replace(" ",",",$clis_name);
 	return $cli_name;
 }
 function selBackendType() {
@@ -231,7 +238,6 @@ function addClient($data) {
 	mysql_query($insertClient) or die('Insert Client Host failed : ' . $insertClient . ' ' . mysql_error());
 
 	return 100;
-
 }
 function addStorage($data) {
 
@@ -444,6 +450,7 @@ function getStorageInfo($stg) {
 		'vrmf' => "/bin/cat /compass/vrmf",
 		'racemq' => "/data/race/rtc_racemqd -v"
 	);
+        $stgType = selStorageByType($stg['name']);
 
 	if (!($connection = ssh2_connect($stg['name'], 26))) {
 
@@ -463,7 +470,8 @@ function getStorageInfo($stg) {
 	//echo "SSH Authentication [OK] <br />";
         $formData['id'] = $stg['id'];
         $formData['name'] = $stg['name'];
-        print "<label style=\"color:white;\">Storage Name : <b style=\"color:red;\">".$stg['name']."</b></label><br>";
+        $formData['Type'] = $stgType['name'];
+        #print "<label style=\"color:white;\">Storage Name : <b style=\"color:red;\">".$stg['name']."</b></label><br>";
 	foreach ($svcomm as $key => $value) {
 		//echo "Key: $key; Value: $value<br />\n";
 		$data = ssh2_exec($connection, $value);
@@ -473,15 +481,21 @@ function getStorageInfo($stg) {
                 if ( $key === "racemq" ) {
                  $matches = null; 
                   $pattern = '/race_mq (.*) \(/';
-	          print "<label style=\"color:white;\">RaceMQ Name <b style=\"color:red;\">".$key." : ".$d. "</b></label><br>";
+	          #print "<label style=\"color:white;\">RaceMQ Name <b style=\"color:red;\">".$key." : ".$d. "</b></label><br>";
 
                   $dres = preg_match($pattern,$d,$matches);
-	          print "<label style=\"color:white;\">RaceMQ Name da <b style=\"color:red;\">".$matches[1]. "</b></label><br>";
-                  logFileWrite("INFO","RaceMQ Version".$dres[1]);
+                  if (empty($matches[1])){
+                    $d = "RaceMQ Ver Unavil";
+                  }
+                  else {
+                  #print "<label style=\"color:white;\">RaceMQ Name da <b style=\"color:red;\">".$matches[1]. "</b></label><br>";
+                  #logFileWrite("INFO","RaceMQ Version".$dres[1]);
+                    $d = $matches[1];
+                  }
                 }
                 $d = trim($d);
                 if (empty($d)){
-                  $d = "NONE";
+                  $d = "Unable to retrive ";
                 }
 		//echo "Output: " .$d ;
 		$formData[$key] = $d;

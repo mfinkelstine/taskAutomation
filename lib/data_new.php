@@ -27,11 +27,8 @@ elseif ($type == "addstorage") {
 
 	$selStorageType = selStorageType(); # Storage Table : Storage
 	print $selStorageType;
-	//echo json_encode($data);
-
 }
 elseif ($type == "addclient") {
-	#print "<h1> You have selected ". $datatype ." </h1>";
 	$selClients = selActive("hosts"); # Clients hosts table : hosts
 }
 elseif ($type == "addStorage_form") {
@@ -44,7 +41,6 @@ elseif ($type == "addbackend") {
 }
 elseif ($type === "clientsid") {
 	$clientsName = selActiveTaskClients($_GET['ids']);
-	#echo "CLIENTS " . $clientsName."<be>";
 	echo $clientsName;
 } else
 	if ($type == "removetask") {
