@@ -9,13 +9,25 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-<title>Test Page</title>
+<title>Automation Page</title>
     <script src="js/jquery-2.1.1.min.js"></script>
     <link rel='stylesheet' href='css/working/body.css' type='text/css' media='all' />
 	<link rel='stylesheet' href='css/working/forms.css' type='text/css' media='all' />
 	<script src="js/jquery.bpopup.min.js"></script>
 	<script src="js/running_tasks.js" type="text/javascript"></script>
-	<script src="js/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="js/jquery-ui.min.js" type="text/javascript"></script>
+
+        <!-- Simple Module JS -->
+        <!-- 
+          <script type='text/javascript' src='js/sm/jquery.js'></script>
+        -->
+        <script type='text/javascript' src='js/sm/basic.js'></script> 
+        <script type='text/javascript' src='js/sm/jquery.simplemodal.js'></script>
+        <!-- Simple Module CSS -->
+          <link type='text/css' href='css/css_sm/demo.css' rel='stylesheet' media='screen' />
+        <!-- Contact Form CSS files -->
+          <link type='text/css' href='css/css_sm/basic.css' rel='stylesheet' media='screen' />
+
 	<link rel='stylesheet' href='js/jquery-ui.min.css' type='text/css' media='all' />
 	<script>
     	var clients 	= <?=$selClients?>;
@@ -30,11 +42,23 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
             } else {
             	$.each(task_list, function(i,task) {
             	var cli_name;
+                var ntaskList;
 
               	if ( task.stat === "0" ) {
                 	var stats = "RUNNING";
               	}
-              		$('#task_list').append('<tr class="'+rowColor+'" id="taskID_'+task.id+'" value="'+task.id+'"><td class="minusTd button" id="removeTask" value="'+task.id+'"></td><td>'+task.taskDate+'</td><td>'+task.storage_name+'</td><td>'+task.storageSVC+'</td><td>'+task.storageRaceMQ+'</td><td>'+task.backend_name+'</td><td>'+task.clientsName+'</td><td>'+task.test_type+'</td><td>'+stats+'</td><td>'+task.user_name+'</td><td class="plusTd button" id="addingTask" value="'+task.id+'"></td></tr>');
+                var newtaskList; 
+                ntaskList = '<tr class="'+rowColor+'" id="taskID_'+task.id+'" value="'+task.id+'">';
+                ntaskList += '<td class="minusTd button" id="removeTask" value="'+task.id+'"></td>';
+                ntaskList += '<td id="showTaskList">'+task.taskDate+'</td><td>'+task.storage_name+' ( ' +task.type+' ) </td>';
+                ntaskList += '<td>'+task.storageSVC+'</td><td>v'+task.RaceBuild+'</td><td>'+task.backendName+'</td>';
+                ntaskList += '<td>'+task.clientsName+'</td><td>'+task.testUsed+'</td>';
+                ntaskList += '<td>'+stats+'</td>';
+                ntaskList += '<td>'+task.user_name+'</td>';
+                ntaskList += '<td class="plusTd button" id="addingTask" value="'+task.id+'"></td></tr>';
+                console.debug("STRING " + ntaskList);
+                        //$('#task_list').append('<tr class="'+rowColor+'" id="taskID_'+task.id+'" value="'+task.id+'"><td class="minusTd button" id="removeTask" value="'+task.id+'"></td><td>'+task.taskDate+'</td><td>'+task.storage_name+' ( ' +task.type+' ) </td><td>'+task.storageSVC+'</td><td>'+task.storageRaceMQ+'</td><td>'+task.backend_name+'</td><td>'+task.clientsName+'</td><td>'+task.test_type+'</td><td>'+stats+'</td><td>'+task.user_name+'</td><td class="plusTd button" id="addingTask" value="'+task.id+'"></td></tr>');
+                        $('#task_list').append(ntaskList);
             		if ( rowColor == "table_dataBGa") { rowColor ="table_dataBGb" ;} else {rowColor ="table_dataBGa" ;}
             	});
             }
@@ -51,7 +75,7 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
             	$('#storage_list').append('<tr  class="table_dataBGa"> <td colspan="6">No Data Found </td></tr>');
             } else {
             	$.each(storage, function(i, stg) {
-              		$('#storage_list').append('<tr class="'+rowColor+'" ><td value="'+stg.id+'">'+stg.name+' </td> <td> '+stg.vrmf+' ('+stg.build+') </td><td>'+stg.racemq+'</td> <td>Free</td></tr>');
+              		$('#storage_list').append('<tr class="'+rowColor+'" ><td value="'+stg.id+'">'+stg.name+' ( '+stg.Type+ ' ) </td> <td> '+stg.vrmf+' ('+stg.build+') </td><td>'+stg.racemq+'</td> <td>Free</td></tr>');
               		if ( rowColor == "table_dataBGa") { rowColor ="table_dataBGb" ;} else {rowColor ="table_dataBGa" ;}
             	});
             }
@@ -119,14 +143,12 @@ the second table will move on to the next line, and will be centered there inste
 					<th>Status</th>
 
 				</tr>
-				<tr class="table_dataBGa">
-                                        <!-- <td>2</td> --> 
+				<!-- <tr class="table_dataBGa">
                                         <td>rtc02f ( FAB1 )</td><td>7.4.0.0 (build 101.001.1010101)</td><td>2.3.4.1</td><td>Free</td>
 				</tr>
 				<tr class="table_dataBGb">
-					<!-- <td>2</td> -->
 					<td>rtc02f</td><td>7.4.0.0 (build 101.001.1010101)</td><td>2.3.4.1</td><td>Free</td>
-				</tr>
+				</tr> -->
 
 			</table>
 
@@ -222,12 +244,40 @@ the second table will move on to the next line, and will be centered there inste
       </select>
     </div>
 </div>
-<div id="taskDisplay">
-<label>Active Task List</label>
+<div id="displayTaskLists">
+<label>Running Tasks</label>
 	<table>
 		<tr><th>Task Name<th></tr>
 	</table>
-<label>Active Task List</label>
+<label>Tasks History</label>
+  <div id='logo'>
+    <h1>Simple<span>Modal</span></h1>
+    <span class='title'>A Modal Dialog Framework Plugin for jQuery</span>
+  </div>
+  <div id='content'>
+    <div id='basic-modal'>
+      <h3>Basic Modal Dialog</h3>
+      <p>A basic modal dialog with minimal styling and no additional options. There are a few CSS properties set internally by SimpleModal, however, SimpleModal relies mostly on style options and/or external CSS for the look and feel.</p>
+      <input type='button' name='basic' value='Demo' class='basic'/> or <a href='#' class='basic'>Demo</a>
+    </div>
+    
+    <!-- modal content -->
+    <div id="basic-modal-content">
+      <h3>Basic Modal Dialog</h3>
+      <p>For this demo, SimpleModal is using this "hidden" data for its content. You can also populate the modal dialog with an AJAX response, standard HTML or DOM element(s).</p>
+      <p>Examples:</p>
+      <p><code>$('#basicModalContent').modal(); // jQuery object - this demo</code></p>
+      <p><code>$.modal(document.getElementById('basicModalContent')); // DOM</code></p>
+      <p><code>$.modal('&lt;p&gt;&lt;b&gt;HTML&lt;/b&gt; elements&lt;/p&gt;'); // HTML</code></p>
+      <p><code>$('&lt;div&gt;&lt;/div&gt;').load('page.html').modal(); // AJAX</code></p>
+    
+      <p><a href='http://www.ericmmartin.com/projects/simplemodal/'>More details...</a></p>
+    </div>
+
+    <!-- preload the images -->
+    <div style='display:none'>
+      <img src='img/basic/x.png' alt='' />
+    </div>
 </div>
 
 

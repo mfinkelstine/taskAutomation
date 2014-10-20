@@ -1,4 +1,4 @@
-function sumbitForm(formdata) {
+function sumbitForm(formdata,formName) {
 	$.ajax({
 		type : "GET",
 		url : 'lib/dataform.php',
@@ -12,6 +12,7 @@ function sumbitForm(formdata) {
 function timeout_init(time) {
 	setTimeout(function() {
 		window.location.reload();
+                document.getElementById( "form" ).reset();
 	}, time);
 }
 function taskSelect(id,taskType) {
@@ -128,6 +129,7 @@ $(document).ready(function() {
 		resizeText();
 	}).trigger('resize');
 	var dialog, form;
+    $("#displayTaskLists").hide();
 	$("#dataResults").hide();
 	$("#addTask_form").hide();		// Adding Task to Database;
 	$("#addClient_form").hide();	// Adding Client To database;
@@ -281,6 +283,7 @@ $(document).ready(function() {
 				}
 			});
 			console.log(this.id);
+            $("#addTask_form").modal();
 			$("#addTask_form").dialog({
 				resizable : false,
 				height : 'auto',
@@ -297,26 +300,23 @@ $(document).ready(function() {
 							var backendID   = $('#addTask_Backend').val();
 							var testTypeID  = $('#addTask_TestType').val();
 							var userID		= $('#addTask_users').val();
-							var form_serialize = $('#single_storage').serialize().replace('&addTask_clients=[0-9]','');
+							//var form_serialize = $('#single_storage').serialize().replace('&addTask_clients=[0-9]','');
 							
-							var formResults  = "type=addTask&addTask_Storage="+storageID+"&addTask_Backend="+backendID+"&addTask_clients="+clientsIDs+"&addTask_TestType="+testTypeID+"2&addTask_users="+userID;
+							console.debug("Test Type ID :"+testTypeID);
+							var formResults  = "type=addTask&addTask_Storage="+storageID+"&addTask_Backend="+backendID+"&addTask_clients="+clientsIDs+"&addTask_TestType="+testTypeID+"&addTask_users="+userID;
 							
 							console.debug("Form Results : "+formResults);
 							console.debug("clientsIDs: "+clientsIDs+",storageID: "+storageID+",backendID: "+backendID+",testTypeID: "+testTypeID)
-							event.preventDefault();
+							//event.preventDefault();
 							
 							//sumbitForm("type=addTask&"+ $(this).serialize()+ "&addTask_clients=" );
 							sumbitForm(formResults);
+                            //timeout_init(3000);
 						} else if ( tskval === "1" ) {
 								if ($(this).val().length > 3 ) {
 									console.debug("Task is type=addTask&"+ $('#group_storage').serialize()+ "&addTask_clients=" );
 								}
 						}
-							// console.log("dataD " +c);
-							// console.log("Adding New Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
-							
-							//sumbitForm("type=addTask&"+ $(this).serialize()+ "&addTask_clients=" + c);
-							//window.setTimeout('location.reload()',8000);
 							$('#addTask_form_data').trigger("reset");
 							return false;
 						//});
@@ -350,6 +350,7 @@ $(document).ready(function() {
 	//
 	// $("body").on("click", "td", function() {
 	//$('#task_list').on('click','td[id^="taskID_"]',function() {
+        //
 	$('#task_list').on('click','td[id^="removeTask"]',function() {
 		// $('#task_list').on('click', 'tr',function() {
 		$('#dialog-confirm').empty();
@@ -358,36 +359,80 @@ $(document).ready(function() {
 		console.debug(taskID);
 		$('#dialog-confirm').append('<table style="border: 1px; ">'+ $(this).closest('tr').html()+ '</table>');
 
-		$("#dialog-confirm").dialog({
-			resizable : false,
-			height : 'auto',
-			width : 'auto',
-			title : "Remove Task From List",
-			modal : true,
-			buttons : {
-				"Remove Task" : function() {
-					$(this).dialog("close");
-					$.ajax({
-						type : "GET",
-						url : 'lib/data_new.php',
-						data : 'data=removeTask&ids='+ taskID,
-						// cache: false,
-						success : function(data) {
-							// console.log(data);
-							timeout_init(1000);
-							// window.location.reload();
-						}
-
-					});
-				},
-				Cancel : function() {
-					$(this).dialog("close");
-				}
+                $("#dialog-confirm").modal({onOpen: function (dialog) {
+                    dialog.overlay.fadeIn('slow', function () {
+                    //dialog.data.hide();
+                      dialog.container.fadeIn('slow', function () {
+                        dialog.data.slideDown('slow');   
+		          $.ajax({
+		            type : "GET",
+			    url : 'lib/data_new.php',
+			    data : 'data=removeTask&ids='+ taskID,
+			    // cache: false,
+			    success : function(data) {
+			      // console.log(data);
+			      timeout_init(1000);
+			      // window.location.reload();
+			    }
+                            
+                          });
+                        });
+                    });
+                }});
+		/*$("#dialog-confirm").dialog({
+		  resizable : false,
+		  height : 'auto',
+		  width : 'auto',
+		  title : "Remove Task From List",
+		  modal : true,
+		  buttons : {
+		    "Remove Task" : function() {
+		    $(this).dialog("close");
+		      $.ajax({
+		        type : "GET",
+			url : 'lib/data_new.php',
+			data : 'data=removeTask&ids='+ taskID,
+			// cache: false,
+			success : function(data) {
+			  // console.log(data);
+			  timeout_init(1000);
+			  // window.location.reload();
 			}
-		});
+		      });
+		    },
+		    Cancel : function() {
+		      $(this).dialog("close");
+		    }
+		  }
+		});*/
 	});
 	// click on addTest
-	//
+	$('#task_list').on('click','td',function() {
+	  var thisIDS = $(this).attr('id');
+	  var thisClose = $(this).closest('td').attr('id');
+	  var thisLast  = $(this).last('td').attr('id');
+
+	  var thisValue = $(this).closest('tr').attr('value');
+          if ( thisIDS === "removeTask" || thisIDS === "addingTask" ) {
+            return;
+          }
+	  console.debug("display Task list: " +thisValue + " " + thisClose + " " +thisLast+" "+thisIDS);
+          $('#displayTaskLists').modal();
+          /*$("#displayTaskLists").dialog({
+	    resizable : false,
+	    height : 'auto',
+	    width : 'auto',
+	    title : "Remove Task From List",
+	    modal : true,
+             buttons: {
+	      "Submit" : function() {
+              },
+	      Cancel : function() {
+              }
+            }
+          });*/
+        });
+
 	$('#task_list').on('click','td[id^="addingTask"]',function() {
 		
 		var thisValue = $(this).closest('tr').attr('value');
@@ -397,64 +442,68 @@ $(document).ready(function() {
 			console.debug("Selected TEST " +this.value)
 		});
 		
+        $('#addTestToTask').modal({
+            overlayCss: {backgroundColor:"#fff"}
+        
+        });
 		
-		$("#addTestToTask").dialog({
-			resizable : false,
-			height : 'auto',
-			width : 'auto',
-			title : "Remove Task From List",
-			modal : true,
-			buttons : {
-				"Submit" : function() {
-					//$(this).dialog("close");
-					$.ajax({
-						type : "GET",
-						url : 'lib/data_new.php',
-						data : 'data=removeTask&ids='+ taskID,
-						// cache: false,
-						success : function(data) {
-							// console.log(data);
-							timeout_init(1000);
-							// window.location.reload();
-						}
-					});
-				},
-				Cancel : function() {
-					$(this).dialog("close");
-				}
-			}
-		});
+		// $("#addTestToTask").dialog({
+		//	resizable : false,
+		//	height : 'auto',
+		//	width : 'auto',
+		//	title : "Remove Task From List",
+		//	modal : true,
+		//	buttons : {
+		//		"Submit" : function() {
+		//			//$(this).dialog("close");
+		//			$.ajax({
+		//				type : "GET",
+		//				url : 'lib/data_new.php',
+		//				data : 'data=removeTask&ids='+ taskID,
+		//				// cache: false,
+		//				success : function(data) {
+		//					// console.log(data);
+		//					timeout_init(1000);
+		//					// window.location.reload();
+		//				}
+		//			});
+		//		},
+		//		Cancel : function() {
+		//			$(this).dialog("close");
+		//		}
+		//	}
+		//});
 		
 	});
 	// Submit Data Section
 	//
 	//
 	//
-	// Add Task to Table;
-	$('#addTask_form_data').submit(function(e) {
-		var clients;
-		var count = "1";
-		var c = "";
-		$('#addTask_clients option:selected').each(function() {
-			var clientValue = $(this).val();
-			var clientLength = $('#addTask_clients :selected').length;
-			if (!(clientValue === "undefined" || clientValue === '')) {
-				if (count <= "1") {
-					c = clientValue;
-				} else {
-					c += ","+ clientValue;
-				}
-				count++;
-			}
-		});
+    // Add Task to Table;
+    $('#addTask_form_data').submit(function(e) {
+        var clients;
+        var count = "1";
+        var c = "";
+        $('#addTask_clients option:selected').each(function() {
+            var clientValue = $(this).val();
+            var clientLength = $('#addTask_clients :selected').length;
+            if (!(clientValue === "undefined" || clientValue === '')) {
+                if (count <= "1") {
+                    c = clientValue;
+                } else {
+                    c += ","+ clientValue;
+                }
+                count++;
+            }
+        });
 
-		// console.log("dataD " +c);
-		// console.log("Adding New Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
-		sumbitForm("type=addTask&"+ $(this).serialize()+ "&addTask_clients=" + c);
-		window.setTimeout('location.reload()',8000);
-		$('#addTask_form_data').trigger("reset");
-		return false;
-	});
+        // console.log("dataD " +c);
+        // console.log("Adding New Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
+        sumbitForm("type=addTask&"+ $(this).serialize()+ "&addTask_clients=" + c);
+        window.setTimeout('location.reload()',8000);
+        $('#addTask_form_data').trigger("reset");
+        return false;
+    });
 
 	// submit clients
 	$('#addClient_form_data').submit(function(e) {

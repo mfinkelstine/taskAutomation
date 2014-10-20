@@ -1,16 +1,24 @@
 <?php
 
 #require_once '../includes/Logger.class';
+#include 'includes/Logger.class';
 #include_once('includes/' . $class . '.class.php');
 
 #$logger = new Logger("/tmp/taskAutomation/","taskAutomation");
 #echo $logger;
 #$logger->info("this is a test);
+include 'KLogger.php';
+$log = new KLogger ( "/tmp/log.txt" , KLogger::DEBUG );
+$log->LogInfo("Internal Query Time: $time_ms milliseconds");
+
+function displayPageInfo($data){
+    print "<label style=\"color:white;\">INFO DATA <b style=\"color:red;\">".$data. "</b></label><br>";
+}
 
 function tab($tab) {
-	for ($i = 0; $i <= $tab; $i++) {
-		echo "\t";
-	}
+  for ($i = 0; $i <= $tab; $i++) {
+    echo "\t";
+  }
 }
 function nl($nl) {
 	for ($i = 0; $i <= $nl; $i++) {
@@ -38,19 +46,17 @@ function logFileWrite($type,$data){  #INFO/WARNING/DEBUG Test dead
   } 
   
   if (is_writeable($filename)) {
-  	if (!$handle = fopen($filename , 'a')) {
-  		echo "Cannot Open File ($filename)";
-  		exit;
-  	}
-	$nowTime = date("Y-m-d H:i:sa");
-	$tt = "[ ".$nowTime." ] [ ".$type." ] ";
-  	if (fwrite($handle, $tt." ".$data)=== FALSE ) {
-	  	#$logger->error('Cannot Write to (',$filenanme,')');
-	  	exit;
-  	}
-
+    if (!$handle = fopen($filename , 'a')) {
+      echo "Cannot Open File ($filename)";
+      exit;
+    }
+    $nowTime = date("Y-m-d H:i:sa");
+    $tt = "[ ".$nowTime." ] [ ".$type." ] ";
+    if (fwrite($handle, $tt." ".$data)=== FALSE ) {
+      #$logger->error('Cannot Write to (',$filenanme,')');
+      exit;
+    }
   }
-
 }
 function selStorageByType($stgName) {
 
@@ -60,12 +66,8 @@ function selStorageByType($stgName) {
   $queryStorageType .= "     WHERE (Storage.name = \"".$stgName."\")";
   $result = mysql_query($queryStorageType) or die("Error in the query " . $queryStorageType. " <br>" . mysql_error());
 
-        print "<label style=\"color:white;\">Storage Name STGbyTYPE: <b style=\"color:red;\">".$stgName."</b></label><br>";
-  #while ($row = mysql_fetch_array($result, MYSQL_ASSOC)) {
   $stgType = mysql_fetch_array($result, MYSQL_ASSOC) ;
   
-        print "<label style=\"color:white;\">Storage Name : <b style=\"color:red;\">".$stgType['type']."</b></label><br>";
-  #}
   return $stgType['type'];
 }
 
@@ -93,25 +95,23 @@ function selTestType() {
 	$QueryType = "SELECT id,name FROM TestType ";
 	$data = getjsonfromSqlArray($QueryType, MYSQLI_ASSOC);
 	return $data;
-
 }
 function selUserList() {
 	$QueryUsers = "SELECT * FROM users ";
 	$data = getjsonfromSqlArray($QueryUsers, MYSQLI_ASSOC);
 	return $data;
-
 }
 function selStorageType() {
 	$QueryStorType = "SELECT * FROM StorageType";
 	$data = getjsonfromSqlArray($QueryStorType, MYSQLI_ASSOC);
-	#echo "<p>" . $data . "</p>";
 	return $data;
 }
 function selActiveTaskClients($ids) {
 	$queryClients = "SELECT name FROM hosts WHERE id IN ( " . $ids . " )";
 	$resClients = mysql_query($queryClients) or die("Error in the query " . $queryClients . " <br>" . mysql_error());
-	$cli_name = 0;
+	$cli_name;
 	$count = 0;
+
 	while ($r = mysql_fetch_array($resClients)) {
 		if ($count <= 0) {
 			$cli_name .= $r['name'];
@@ -120,6 +120,7 @@ function selActiveTaskClients($ids) {
 		}
 		$count++;
 	}
+    print ("<label> <b>".$cli_name."</b></label>");
 	return $cli_name;
 }
 function selBackendType() {
@@ -128,26 +129,46 @@ function selBackendType() {
 	return $data;
 }
 function selActiveTask() {
-	$selActiveTask = "SELECT  runningTask.id,
-	                            runningTask.storageSVC,
-	                            runningTask.storageRaceMQ,
-	                            users.name AS user_name,
-	                            TestType.name AS test_type,
-	                            Storage.name AS storage_name,
-	                            StorageBackend.name AS backend_name,
-	                            runningTask.taskDate,
-	                            runningTask.clientsName,
-	                            runningTask.active AS stat
-	                      FROM  (((automation.runningTask runningTask
-	                INNER JOIN automation.users users                   ON (runningTask.userName = users.id))
-	                INNER JOIN automation.TestType TestType             ON (runningTask.testUsed = TestType.id))
-	                INNER JOIN automation.Storage Storage               ON (runningTask.storageName = Storage.id))
-	                INNER JOIN automation.StorageBackend StorageBackend ON (runningTask.backendName = StorageBackend.id)
-	                WHERE (runningTask.active = 0)";
+#	$selActiveTask = "SELECT  runningTask.id,
+#	                            runningTask.storageSVC,
+#	                            runningTask.storageRaceMQ,
+#	                            users.name AS user_name,
+#	                            TestType.name AS test_type,
+#	                            Storage.name AS storage_name,
+#	                            StorageBackend.name AS backend_name,
+#	                            runningTask.taskDate,
+#	                            runningTask.clientsName,
+#	                            runningTask.active AS stat
+#	                      FROM  (((automation.runningTask runningTask
+#	                INNER JOIN automation.users users                   ON (runningTask.userName = users.id))
+#	                INNER JOIN automation.TestType TestType             ON (runningTask.testUsed = TestType.id))
+#	                INNER JOIN automation.Storage Storage               ON (runningTask.storageName = Storage.id))
+#	                INNER JOIN automation.StorageBackend StorageBackend ON (runningTask.backendName = StorageBackend.id)
+#	                WHERE (runningTask.active = 0)";
+        $selActiveTask = "SELECT DISTINCT StorageBackend.name AS backendName,
+                                          StorageType.type AS storageType,
+                                          RaceMQBuilds.build AS RaceBuild,
+                                          runningTask.taskDate,
+                                          runningTask.storageSVC,
+                                          runningTask.clientsName,
+                                          runningTask.testUsed,
+                                          runningTask.id,
+                                          users.name AS user_name,
+                                          Storage.name AS storage_name
+                                     FROM ((((automation.Storage Storage
+                               INNER JOIN automation.StorageType StorageType        ON (Storage.type = StorageType.id))
+                               INNER JOIN automation.runningTask runningTask        ON (runningTask.storageName = Storage.id))
+                               INNER JOIN automation.StorageBackend StorageBackend  ON (runningTask.backendName = StorageBackend.id))
+                               INNER JOIN automation.RaceMQBuilds RaceMQBuilds      ON (runningTask.RaceMQBuildsID = RaceMQBuilds.id))
+                               INNER JOIN automation.users users                    ON (runningTask.userName = users.id)
+                                    WHERE (runningTask.active = 0 )";
+
 
 	$QueryStorType = "SELECT * FROM `runningTask` WHERE `active` = 1";
+        #print "<label style=\"color:white;\">Active Task Data <b style=\"color:red;\">".$selActiveTask."</b></label><br>";
 	$resultsActiveTask = mysql_query($selActiveTask) or die("<b>ERROR : </b> Unable to retrive active task results" . mysql_error());
 	$data = getJsonActiveTasks($selActiveTask, MYSQLI_ASSOC);
+        
 
 	#$stgJdecode = json_decode($data);
 	#echo "<h4>stgJdecode " print_r($stgJdecode)."<h4>";
@@ -155,9 +176,18 @@ function selActiveTask() {
 }
 function getJsonActiveTasks($sql, $arrType) {
 	$res = mysql_query($sql) or die("Error in the query " . $sql . " <br>" . mysql_error());
+        #print "<label style=\"color:white;\">Active Task Data <b style=\"color:red;\">".var_dump($res)."</b></label><br>";
 	$rowJson = array ();
 	while ($r = mysql_fetch_assoc($res)) {
 		$cliIDS = $r['clientsName'];
+                $stgNames = explode("," , $r['storage_name']);
+        
+                foreach ($stgNames as $stgName) {
+                
+                    $stgType = selStorageByType($stgName);
+                    $r['type'] = $stgType;
+	                //print "<label style=\"color:white;\">Storage ID: <b style=\"color:red;\">". $stgName . "</b></label><br>";
+                }
 		$unixtime = $r['taskDate'];
 		$r['clientsName'] = selActiveTaskClients($cliIDS);
 		$r['taskDate'] = date("M j Y - G:i:s ", $unixtime);
@@ -297,9 +327,9 @@ function addTask($formData) {
 		'racemq' => "/data/race/rtc_racemqd -v"
 	);
 
-	$stgS = "SELECT active,ip FROM Storage WHERE id = \"" . $formData['addTask_Storage'] . "\""; // Storage Check
+	$stgS = "SELECT active,ip FROM Storage WHERE id = \"" . $formData['addTask_Storage'] . "\"";     // Storage Check
 	$stgB = "SELECT active FROM StorageBackend WHERE id = \"" . $formData['addTask_Backend'] . "\""; // Storage Backend Check
-	$stgC = "SELECT name,active FROM hosts WHERE id = "; // Stotage Clients Check
+	$stgC = "SELECT name,active FROM hosts WHERE id = ";                                             // Stotage Clients Check
 
 	$stgSr = mysql_query($stgS) or die('Unable To Query Storage Table' . $stgS . ' ERROR : ' . mysql_error()); //Storage Results Check
 	$status['s'] = mysql_fetch_assoc($stgSr);
@@ -351,6 +381,11 @@ function addTask($formData) {
 	$race = preg_match("/race_mq v(.*?) \(/", $formData['racemq']);
 	preg_match("/(\d.*)( \(.*)/", $formData['racemq'], $output); // extract race version
 	$formData['racemq'] = $output[1];
+
+    // Query RaceMQ on Table RaceMQBuilds
+    //
+    
+	$dataKV['RaceMQBuildsID'] = getRaceMQID($formData[racemq]);
 	$formData['timetamp'] = date_timestamp_get($date);
 
 	//$dataKV['taskDate']       = date('l jS of F g:i A.', $formData[timetamp]);
@@ -359,7 +394,6 @@ function addTask($formData) {
 	$dataKV['storageName'] = $formData[addTask_Storage];
 	$dataKV['storageSVC'] = $formData[vrmf] . " " . $formData[build];
 	$dataKV['backendName'] = $formData[addTask_Backend];
-	$dataKV['storageRaceMQ'] = $formData[racemq];
 	$dataKV['clientsName'] = $formData[addTask_clients];
 	$dataKV['testUsed'] = $formData[addTask_TestType];
 	$dataKV['userName'] = $formData[addTask_users];
@@ -394,6 +428,23 @@ function addTask($formData) {
 		$cliUpdate = "UPDATE `automation`.`hosts` SET `active` = '1' WHERE `hosts`.`id` = \"" . $cliID . "\"";
 		mysql_query($cliUpdate) or die("<b>ERROR</b> Udpate clients ID : " . $cliID . " <br />" . $cliUpdate . "<br />" . mysql_error());
 	}
+
+}
+function getRaceMQID($race){ 
+
+    $stgR = "SELECT id FROM RaceMQBuilds WHERE build = \"" . $race . "\""; // SELECT RaceMQ Build ID from Table 
+    $result = mysql_query($stgR) or die ("<label>ERROR: Unable to Query RaceMQ from table RaceMQBuilds</label><br>".mysql_error());
+	$num_rows = mysql_num_rows($result);
+	if ($num_rows > 0) {
+        $raceID = mysql_fetch_assoc($result);
+		return  $raceID["id"];
+	}
+
+    $insertRace = " INSERT INTO RaceMQBuilds ( race ) VALUES ( " .$race.") ";
+	mysql_query($insertRace) or die('Insert RaceMQ failed : ' . $insertRace . ' ' . mysql_error());
+	$id = mysql_insert_id();
+
+    return $id;
 
 }
 function removeTask($taskID) {
@@ -443,8 +494,22 @@ function removeTask($taskID) {
 	return "300";
 
 }
-function getStorageInfo($stg) {
+function getNodesIPs($stgName) {
+  $query = "SELECT DISTINCT StorageNodes.ip , StorageNodes.name
+                          FROM automation.Storage Storage
+                    INNER JOIN automation.StorageNodes StorageNodes
+                            ON (Storage.id = StorageNodes.clusterID)
+                         WHERE (Storage.name = '$stgName')";
+  
+  $result = mysql_query($query) or die('Query failed: ' . mysql_error());
+  $nodes = array();
+  while ( $r = mysql_fetch_array($result)) {
+    $nodes[$r['name']] = $r['ip'];
+  }
+  return $nodes;
+}
 
+function getStorageInfo($stg) {
 	$svcomm = array (
 		'build' => "/bin/cat /compass/version",
 		'vrmf' => "/bin/cat /compass/vrmf",
@@ -454,13 +519,23 @@ function getStorageInfo($stg) {
 
 	if (!($connection = ssh2_connect($stg['name'], 26))) {
 
-		echo "Unable to Connect to Cluster Node" . $stg['name'] . "<br>";
-		//$selQstg = "SELECT id FROM storage WHERE name = ".$stgName ." ";
+	  echo "Unable to Connect to Cluster Node" . $stg['name'] . "<br>";
+          $stgNodes = getNodesIPs($stg['name']);
 
+                foreach ($ip as $key => $value ) {
+	          if (!($connection = ssh2_connect($stg['name'], 26))) {
+	            print "<label style=\"color:white;\">RaceMQ Name <b style=\"color:red;\">".$ip." : ".$kay. "</b></label><br>";
+                  }
+                }
 		echo "[FAILED]<br />";
-		exit (251);
+                $formData['id'] = $stg['id'];
+                $formData['name'] = $stg['name'];
+                $formData['Type'] = $stgType;
+                $formData['build']= "Unable to retrive SVC Build";
+                $formData['racemq']= "Unable to tertive RaceMQ Build ";
+		#return (251);
+		return $formData;
 	}
-//	echo "SSH Connection [OK] <br />";
 
 	if (!(ssh2_auth_password($connection, 'root', 'l0destone'))) {
 		echo "User/Password are in Correct while connectiong to : [ " . $stg['name']. " ]<br>";
@@ -470,8 +545,8 @@ function getStorageInfo($stg) {
 	//echo "SSH Authentication [OK] <br />";
         $formData['id'] = $stg['id'];
         $formData['name'] = $stg['name'];
-        $formData['Type'] = $stgType['name'];
-        #print "<label style=\"color:white;\">Storage Name : <b style=\"color:red;\">".$stg['name']."</b></label><br>";
+        $formData['Type'] = $stgType;
+        #$log->LogInfo("Storage Name : .$stg['name']");
 	foreach ($svcomm as $key => $value) {
 		//echo "Key: $key; Value: $value<br />\n";
 		$data = ssh2_exec($connection, $value);
