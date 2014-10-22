@@ -23,8 +23,8 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
         -->
         <script type='text/javascript' src='js/sm/basic.js'></script> 
         <script type='text/javascript' src='js/sm/jquery.simplemodal.js'></script>
-        <!-- Simple Module CSS -->
-          <link type='text/css' href='css/css_sm/demo.css' rel='stylesheet' media='screen' />
+        <!-- Simple Module CSS 
+          <link type='text/css' href='css/css_sm/demo.css' rel='stylesheet' media='screen' />-->
         <!-- Contact Form CSS files -->
           <link type='text/css' href='css/css_sm/basic.css' rel='stylesheet' media='screen' />
 
@@ -169,6 +169,7 @@ the second table will move on to the next line, and will be centered there inste
        		<option value="1">Group Task</option>
     	</select>
       </div>
+    <br>
 	<!-- Single Storage Task -->
     <form id="single_storage" >
     	<table>
@@ -178,6 +179,9 @@ the second table will move on to the next line, and will be centered there inste
       		<tr><td>Test Type</td><td>       <select name="addTask_TestType" id="addTask_TestType"> </select></td></tr>
       		<tr><td>User Name</td><td>       <select name="addTask_users"    id="addTask_users">       </select></td></tr>
      	</table>
+<button type="button" class="button positive save">
+    <img src="/images/tick.png" alt="Save"> Save
+</button>
      </form>
      <!-- Group Storage Task -->
 	 <form id="group_storage">
@@ -186,6 +190,9 @@ the second table will move on to the next line, and will be centered there inste
 			<tr><td>Backend Storage</td><td> <select name="addgrpTask_Backend" id="addgrpTask_Backend"></select></td></tr>
 			<tr><td>Client Name</td><td>    <select name="addgrpTask_clients"  id="addgrpTask_clients" multiple="multiple"></select></td></tr>
 		</table>
+        <button type="button" class="button positive save">
+            <img src="/images/tick.png" alt="Save"> Save
+        </button>
      </form>
   </div>
 

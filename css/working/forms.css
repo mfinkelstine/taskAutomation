@@ -111,11 +111,13 @@ table.storage_table {
 table.storage_table th {
 	border: 0px solid Black;
 	padding: 8px;
-	text-align: justify;/*
+	text-align: justify;
+    /*
 	 border: 0px solid Black;
 	 padding: 8px;
 	 font-weight: bold;
-	 color: #ffffff;*/
+	 color: #ffffff;
+     */
 }
 table.storage_table td {
 	border: 0px solid Black;
