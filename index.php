@@ -13,6 +13,7 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
     <script src="js/jquery-2.1.1.min.js"></script>
     <link rel='stylesheet' href='css/working/body.css' type='text/css' media='all' />
 	<link rel='stylesheet' href='css/working/forms.css' type='text/css' media='all' />
+	<link rel='stylesheet' href='css/working/buttons.css' type='text/css' media='all' />
 	<script src="js/jquery.bpopup.min.js"></script>
 	<script src="js/running_tasks.js" type="text/javascript"></script>
         <script src="js/jquery-ui.min.js" type="text/javascript"></script>
@@ -143,15 +144,7 @@ the second table will move on to the next line, and will be centered there inste
 					<th>Status</th>
 
 				</tr>
-				<!-- <tr class="table_dataBGa">
-                                        <td>rtc02f ( FAB1 )</td><td>7.4.0.0 (build 101.001.1010101)</td><td>2.3.4.1</td><td>Free</td>
-				</tr>
-				<tr class="table_dataBGb">
-					<td>rtc02f</td><td>7.4.0.0 (build 101.001.1010101)</td><td>2.3.4.1</td><td>Free</td>
-				</tr> -->
-
 			</table>
-
 	</div>
 </div>
 
@@ -179,9 +172,9 @@ the second table will move on to the next line, and will be centered there inste
       		<tr><td>Test Type</td><td>       <select name="addTask_TestType" id="addTask_TestType"> </select></td></tr>
       		<tr><td>User Name</td><td>       <select name="addTask_users"    id="addTask_users">       </select></td></tr>
      	</table>
-<button type="button" class="button positive save">
-    <img src="/images/tick.png" alt="Save"> Save
-</button>
+        <div class="one-third column">
+            <p><input type="submit" value="Submit Single Task" class="graphite-flat-button" id="addTaskS_form_data" ></p>
+        </div>
      </form>
      <!-- Group Storage Task -->
 	 <form id="group_storage">
@@ -190,9 +183,9 @@ the second table will move on to the next line, and will be centered there inste
 			<tr><td>Backend Storage</td><td> <select name="addgrpTask_Backend" id="addgrpTask_Backend"></select></td></tr>
 			<tr><td>Client Name</td><td>    <select name="addgrpTask_clients"  id="addgrpTask_clients" multiple="multiple"></select></td></tr>
 		</table>
-        <button type="button" class="button positive save">
-            <img src="/images/tick.png" alt="Save"> Save
-        </button>
+        <div >
+            <p><input type="submit" value="Submit Group Task" class="graphite-flat-button" id="addTaskG_form_data"></p>
+        </div>
      </form>
   </div>
 

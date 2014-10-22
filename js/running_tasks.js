@@ -17,7 +17,7 @@ function timeout_init(time) {
 }
 function taskSelect(id,taskType) {
 	if ( id === "0" ) {
-		console.debug("VALUE A single "+id);
+		console.debug("Adding Single Task "+id);
 		$("#group_storage").hide();
 		$("#single_storage").show();
 
@@ -66,7 +66,7 @@ function taskSelect(id,taskType) {
 			}
 		});
 	} else if ( id === "1") {
-		console.debug("Group Task" +id);
+		console.debug("Adding Group Task" +id);
 		$("#single_storage").hide();
 		$("#group_storage").show();
 
@@ -139,13 +139,9 @@ $(document).ready(function() {
 	$(".button").click(function() {
 		var formID = this.id;
 		// Clear selection from form
-		//$("#addStorage_form_data").empty();
-		//$("#addBackend_form_data").empty();
 		
 		console.debug("VAL ID " + formID);
 		if (formID == "addClient") { //addClient_form ***************************************************************************
-			// $("#sip").mask("9?99.9?99.9?99.9?99",
-			// {placeholder:" "});
 			console.log("#" + formID + "_form");
 			$("#addClient_form").dialog({
 				resizable : false,
@@ -154,8 +150,6 @@ $(document).ready(function() {
 				modal : true,
 				buttons : {
 					"Submit" : function() {
-						//***************************************************************************
-						//var clientSerialize = $('#addClient_form_data').serialize();
 						console.debug("adding client to database : "+$('#addClient_form_data').serialize());
 						sumbitForm("type=addClient&" + $('#addClient_form_data').serialize());
 						window.setTimeout('location.reload()', 8000);
@@ -168,7 +162,10 @@ $(document).ready(function() {
 				}
 			});
 		}
-		if (formID == "addStorage") { //addStorageBackend_form ***************************************************************************
+        //////////////////////////////////////////////////
+        //addStorageBackend_form ***************************************************************************
+        //
+		if (formID == "addStorage") { 
 			var storage_type ;
 			$("#addStorage_form").dialog({
 				resizable : false,
@@ -371,7 +368,7 @@ $(document).ready(function() {
 			    // cache: false,
 			    success : function(data) {
 			      // console.log(data);
-			      timeout_init(1000);
+			      //MEIR timeout_init(1000);
 			      // window.location.reload();
 			    }
                             
@@ -475,11 +472,20 @@ $(document).ready(function() {
 		//});
 		
 	});
+
 	// Submit Data Section
 	//
 	//
 	//
     // Add Task to Table;
+    $('#addTaskS_form_data').submit(function(e) { 
+        console.log("Adding Single Task : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
+		return ;
+    });
+    $('#addTaskG_form_data').submit(function(e) { 
+        console.log("Adding Group Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
+		return ;
+    });
     $('#addTask_form_data').submit(function(e) {
         var clients;
         var count = "1";
@@ -514,6 +520,7 @@ $(document).ready(function() {
 		return false;
 	});
 	// submit storage
+    
 	$('#addStorage_form_data').submit(function(e) {
 		// console.log("\nAdding New Storage To Database: Data :" + $(this).serialize()+"\n");
 		var value = sumbitForm("type=addStorage&"+ $(this).serialize());
