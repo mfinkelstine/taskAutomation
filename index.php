@@ -58,8 +58,7 @@ $selTask = selActiveTask(); # Select Active Task from     : runningTask
                 ntaskList += '<td>'+task.user_name+'</td>';
                 ntaskList += '<td class="plusTd button" id="addingTask" value="'+task.id+'"></td></tr>';
                 console.debug("STRING " + ntaskList);
-                        //$('#task_list').append('<tr class="'+rowColor+'" id="taskID_'+task.id+'" value="'+task.id+'"><td class="minusTd button" id="removeTask" value="'+task.id+'"></td><td>'+task.taskDate+'</td><td>'+task.storage_name+' ( ' +task.type+' ) </td><td>'+task.storageSVC+'</td><td>'+task.storageRaceMQ+'</td><td>'+task.backend_name+'</td><td>'+task.clientsName+'</td><td>'+task.test_type+'</td><td>'+stats+'</td><td>'+task.user_name+'</td><td class="plusTd button" id="addingTask" value="'+task.id+'"></td></tr>');
-                        $('#task_list').append(ntaskList);
+                $('#task_list').append(ntaskList);
             		if ( rowColor == "table_dataBGa") { rowColor ="table_dataBGb" ;} else {rowColor ="table_dataBGa" ;}
             	});
             }
@@ -137,7 +136,6 @@ the second table will move on to the next line, and will be centered there inste
 					<th class="plusTd button" id="addStorage"></th>
 				</tr>
 				<tr class="table_header">
-					<!-- <th>ID</th> -->
 					<th>Storage Name</th>
 					<th>SVC Version/Build</th>
 					<th>RaceMQ Build</th>
@@ -155,16 +153,21 @@ the second table will move on to the next line, and will be centered there inste
    <!-- <form id="addTask_form_data"> -->
    	<div>
     <!-- <form id="addTask_form" class="addTask_form_data">  -->
-    	<span>Select Storage Task</span>
-      	<select id="task_storage_select">
-       		<option value="none" selected>--- please select ---</option>
-       		<option value="0">Single Task</option>
-       		<option value="1">Group Task</option>
-    	</select>
+        <table>
+        <tr>
+    	<td><span>Select Storage Task</span></td><td>
+            <select id="task_storage_select">
+       		    <option value="none" selected>--- please select ---</option>
+       		    <option value="0">Single Task</option>
+       		    <option value="1">Group Task</option>
+                </select>
+                </td>
+            </tr>
+        </table>
       </div>
     <br>
 	<!-- Single Storage Task -->
-    <form id="single_storage" >
+    <form id="single_storage" value="single_form_data">
     	<table>
       		<tr><td>Storage Name</td><td>    <select name="addTask_Storage"  id="addTask_Storage" ></select></td></tr>
       		<tr><td>Storage Backend</td><td> <select name="addTask_Backend"  id="addTask_Backend" ></select></td></tr>
@@ -173,18 +176,18 @@ the second table will move on to the next line, and will be centered there inste
       		<tr><td>User Name</td><td>       <select name="addTask_users"    id="addTask_users">       </select></td></tr>
      	</table>
         <div class="one-third column">
-            <p><input type="submit" value="Submit Single Task" class="graphite-flat-button" id="addTaskS_form_data" ></p>
+            <p><input type="submit" value="Submit Single Task" class="graphite-flat-button" id="addTaskS_submit"></p>
         </div>
      </form>
      <!-- Group Storage Task -->
-	 <form id="group_storage">
+	 <form id="group_storage" value="group_storage_data">
 	 	<table>
 			<tr><td>Storage Name</td><td>    <select name="addgrpTask_Storage"  id="addgrpTask_Storage" multiple="multiple"></select></td></tr>
 			<tr><td>Backend Storage</td><td> <select name="addgrpTask_Backend" id="addgrpTask_Backend"></select></td></tr>
 			<tr><td>Client Name</td><td>    <select name="addgrpTask_clients"  id="addgrpTask_clients" multiple="multiple"></select></td></tr>
 		</table>
-        <div >
-            <p><input type="submit" value="Submit Group Task" class="graphite-flat-button" id="addTaskG_form_data"></p>
+        <div id="addTaskG_form_data">
+            <p><input type="submit" value="Submit Group Task" class="graphite-flat-button" id="addTaskG_submit"></p>
         </div>
      </form>
   </div>
@@ -219,6 +222,9 @@ the second table will move on to the next line, and will be centered there inste
         	<tr><td>Storage Node2 IP</td><td>   <input name="sn2ip" type="text" class="m-wrap"/></td></tr>
         	<tr><td>Storage Type</td><td>		<select name="stype" id="stype"></select></td></tr>
         </table>
+        <div class="one-third column">
+            <p><input type="submit" value="Submit Single Task" class="graphite-flat-button" id="addStorage_submit"></p>
+        </div>
     </form>
 	<!-- Backend Form -->
     <form id="addBackend_form_data">
@@ -228,6 +234,9 @@ the second table will move on to the next line, and will be centered there inste
         <tr><td>Backend IP</td><td><input name="bip"  type="text" class="m-wrap"></td></tr>
         <tr><td>Backend Type</td><td><select name="btype" id="btype" ></select></td></tr>
         </table>
+        <div class="one-third column">
+            <p><input type="submit" value="Submit Backend Storage" class="graphite-flat-button" id="addBackend_submit"></p>
+        </div>
     </form>
   </div>
 

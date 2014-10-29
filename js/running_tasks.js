@@ -167,39 +167,35 @@ $(document).ready(function() {
         //
 		if (formID == "addStorage") { 
 			var storage_type ;
-			$("#addStorage_form").dialog({
-				resizable : false,
-				height : 'auto',width : 'auto',
-				title : "Add Storage/Backend ",
-				modal : true,
-				buttons : {
-					"Submit" : function(type) {
-						if (storage_type === "storage"){
-							//console.debug("type storage : "+storage_type+"\nserialize : "+$('#addStorage_form_data').serialize());
-							var storage_serialize = $('#addStorage_form_data').serialize();
-							sumbitForm("type=addStorage&"+ storage_serialize);
-							// console.log("Return Data from submitForm : "+ value + "\n");
-							// window.setTimeout('location.reload()', 8000);
-							console.debug("\nAdding New Storage : Data :" +backend_serialize+"\n");
-							$('#addStorage_form').trigger("reset");
-							location.reload();
-							return false;
-						} else if ( storage_type === "backend") {
-							//console.debug("type backend : "+storage_type+"\nserialize : "+$('#addBackend_form_data').serialize());
-							var backend_serialize = $('#addBackend_form_data').serialize();
-							sumbitForm("type=addBackend&" + backend_serialize);
-							console.debug("\nAdding New Backend Storage : Data :" +backend_serialize+"\n");
-							// window.setTimeout('location.reload()', 8000);
-							$('#addBackend_form_data').trigger("reset");
-							location.reload();
-							return false;
-						}
-					}
-				},
-				Cancel : function() {
-					$(this).dialog("close");
-				}
-			});
+            $("#addStorage_form").modal();
+		//	$("#addStorage_form").dialog({
+		//		resizable : false,
+		//		height : 'auto',width : 'auto',
+		//		title : "Add Storage/Backend ",
+		//		modal : true,
+		//		buttons : {
+		//			"Submit" : function(type) {
+		//				if (storage_type === "storage"){
+		//					var storage_serialize = $('#addStorage_form_data').serialize();
+		//					sumbitForm("type=addStorage&"+ storage_serialize);
+		//					console.debug("\nAdding New Storage : Data :" +backend_serialize+"\n");
+		//					$('#addStorage_form').trigger("reset");
+		//					location.reload();
+		//					return false;
+		//				} else if ( storage_type === "backend") {
+		//					var backend_serialize = $('#addBackend_form_data').serialize();
+		//					sumbitForm("type=addBackend&" + backend_serialize);
+		//					console.debug("\nAdding New Backend Storage : Data :" +backend_serialize+"\n");
+		//					$('#addBackend_form_data').trigger("reset");
+		//					location.reload();
+		//					return false;
+		//				}
+		//			}
+		//		},
+		//		Cancel : function() {
+		//			$(this).dialog("close");
+		//		}
+		//	});
 			
 			$('#addStorage_form_data').hide();
 			$('#addBackend_form_data').hide();
@@ -209,7 +205,6 @@ $(document).ready(function() {
 					$('#addBackend_form_data').hide();
 					$('#addStorage_form_data').show();
 					$('#stype').empty();
-					//$("select option").prop("selected", false);
 					$.ajax({
 						type : "GET",
 						dataType : "json",
@@ -230,9 +225,7 @@ $(document).ready(function() {
 					return this.value;
 				} else if (this.value === "backend") {
 					storage_type = this.value;
-					//$("select option").prop("selected", false);
 					$("#btype").empty();
-					
 					$('#addStorage_form_data').hide();
 					$('#addBackend_form_data').show();
 					$.ajax({
@@ -271,16 +264,19 @@ $(document).ready(function() {
 					$("#addTask_Backend").empty();
 					$("#addTask_TestType").empty();
 					$("#addTask_users").empty();
+                    $("#simplemodal-container").css("width","450px","height","450px");
 					taskSelect(this.value,formID);
 				} else if (this.value === "1") {
 					$("#addgrpTask_Storage").empty();
 					$("#addgrpTask_Backend").empty();
 					$("#addgrpTask_clients").empty();
+                    $("#simplemodal-container").css("width","450px","height","450px");
 					taskSelect(this.value,formID);
 				}
 			});
-			console.log(this.id);
+			console.log("ADDING TASK FORM OPEN "+this.id);
             $("#addTask_form").modal();
+			return false;
 			//$("#addTask_form").dialog({
 			//	resizable : false,
 			//	height : 'auto',
@@ -345,14 +341,9 @@ $(document).ready(function() {
 
 	// on click remove bottom
 	//
-	// $("body").on("click", "td", function() {
-	//$('#task_list').on('click','td[id^="taskID_"]',function() {
-        //
 	$('#task_list').on('click','td[id^="removeTask"]',function() {
-		// $('#task_list').on('click', 'tr',function() {
 		$('#dialog-confirm').empty();
 		var taskID = $(this).closest('tr').attr('value');
-		// var trid = $(this).val();
 		console.debug(taskID);
 		$('#dialog-confirm').append('<table style="border: 1px; ">'+ $(this).closest('tr').html()+ '</table>');
 
@@ -367,9 +358,7 @@ $(document).ready(function() {
 			    data : 'data=removeTask&ids='+ taskID,
 			    // cache: false,
 			    success : function(data) {
-			      // console.log(data);
-			      //MEIR timeout_init(1000);
-			      // window.location.reload();
+			      timeout_init(1000);
 			    }
                             
                           });
@@ -478,14 +467,28 @@ $(document).ready(function() {
 	//
 	//
     // Add Task to Table;
-    $('#addTaskS_form_data').submit(function(e) { 
-        console.log("Adding Single Task : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
-		return ;
+    //$('#addTaskS_submit').submit(function() { 
+    $("#addTaskG_submit").click(function(){
+		console.log("\nAdding New Backend Storage : Data :" +$("#group_storage").serialize()+"\n");
+        alert("ADD Groupd Task");
+        return false;
+        
     });
-    $('#addTaskG_form_data').submit(function(e) { 
-        console.log("Adding Group Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients="+c);
-		return ;
+    $("#addTaskS_submit").click(function(){
+        
+		console.log("\nAdding New Backend Storage : Data :" +$("#single_storage").serialize()+"\n");
+        return false;
     });
+    /*$( "form" ).submit(function(e) {
+        var theForm = $(this);
+        var formID = theForm.attr("id");
+        console.log("Adding Single Task A1: Data : FormID ID : "+formID+" This FORM " +theForm);
+        e.preventDefault();
+    });
+    $('#addTaskG_submit').submit(function() { 
+        console.log("Adding Group Task To Database : Data : type=Task&" + $(this ).serialize() + "&addTask_clients=");
+		return false;
+    });*/
     $('#addTask_form_data').submit(function(e) {
         var clients;
         var count = "1";
