@@ -123,9 +123,48 @@ sub selSVCBuild {
 sub updateStorageVerBuild {
     my $storageInfo = shift;
     my $dbh = dbConnect();
+    my ($sth,$svcVBid);
 
+    print Dumper($storageInfo);
 
-    my $sth = $dbh->prepare("SELECT DISTINCT id FROM svcVersionBuildID WHERE ( svcVersionID = \"".."\" ) AND ( svcBuildID = \"".."\" )");
+    foreach my $storage ( keys %{$storageInfo}) { 
+        my $buildID = $storageInfo->{$storage}->{buildID};
+        my $verID   = $storageInfo->{$storage}->{verID};
+        print "Update storage ".$storage." SVC Version [ ".$verID. " ] SVC Build [ " .$buildID." ]\n";
+        my $selStg = "SELECT DISTINCT id FROM svcVersionBuildID WHERE ( svcVersionID = \"".$verID."\" ) AND ( svcBuildID = \"".$buildID."\" )";
+
+        $sth = $dbh->prepare($selStg);
+        $sth->execute();
+        my $rv = $sth->rows;
+        $svcVBid = $sth->fetchall_arrayref;
+
+        if ( $rv eq "0" ) {
+            logger("INSERT INTO svcVersionBuildID table column svcVersionBuildID,svcBuildID",7);
+            my $iSql = "INSERT IGNORE INTO svcVersionBuildID ( svcVersionID ,svcBuildID ) VALUES ( '".$verID."','".$buildID."')";
+            $sth = $dbh->prepare($iSql);
+            $sth->execute();
+            $sth = $dbh->prepare($selStg);
+            $sth->execute();
+            $svcVBid = $sth->fetchall_arrayref;
+
+            if ( $DBI::errstr ) {
+                logger("unable to Insert into svcVersionBuildID data",2);
+                exit 999;
+            }
+        }
+
+        logger("Update Storage table in column svcVersionBuildID");
+
+        my $sqlStorageUpdate = "UPDATE Storage SET svcVersionBuildID = '".$svcVBid->{id}."' WHERE id = '".$storageInfo->{$storage}->{storageNodeID}."'";
+        $sth = $dbh->prepare($sqlStorageUpdate);
+        $sth->execute();
+        
+        if ( $DBI::errstr ) {
+            logger("unable to update storage table ",2);
+            exit 998;
+        }
+    }
+#    my $sth = $dbh->prepare("SELECT DISTINCT id FROM svcVersionBuildID WHERE ( svcVersionID = \"".$verID."\" ) AND ( svcBuildID = \"".$buildID."\" )");
 
 
 }
