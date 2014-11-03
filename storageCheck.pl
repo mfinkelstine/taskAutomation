@@ -123,7 +123,7 @@ sub selSVCBuild {
 sub updateStorageVerBuild {
     my $storageInfo = shift;
     my $dbh = dbConnect();
-    my ($sth,$svcVBid);
+    my ($sth,@svcVBid);
 
     print Dumper($storageInfo);
 
@@ -136,7 +136,7 @@ sub updateStorageVerBuild {
         $sth = $dbh->prepare($selStg);
         $sth->execute();
         my $rv = $sth->rows;
-        $svcVBid = $sth->fetchall_arrayref;
+        my @svcVBid = $sth->fetchrow_array;
 
         if ( $rv eq "0" ) {
             logger("INSERT INTO svcVersionBuildID table column svcVersionBuildID,svcBuildID",7);
@@ -145,7 +145,7 @@ sub updateStorageVerBuild {
             $sth->execute();
             $sth = $dbh->prepare($selStg);
             $sth->execute();
-            $svcVBid = $sth->fetchall_arrayref;
+            @svcVBid = $sth->fetchrow_array;
 
             if ( $DBI::errstr ) {
                 logger("unable to Insert into svcVersionBuildID data",2);
@@ -153,16 +153,18 @@ sub updateStorageVerBuild {
             }
         }
 
-        logger("Update Storage table in column svcVersionBuildID");
+        logger("Update Storage table in column svcVersionBuildID",2);
+       print Dumper(@svcVBid); 
 
-        my $sqlStorageUpdate = "UPDATE Storage SET svcVersionBuildID = '".$svcVBid->{id}."' WHERE id = '".$storageInfo->{$storage}->{storageNodeID}."'";
+        my $sqlStorageUpdate = "UPDATE Storage SET svcVersionBuildID = '".$svcVBid[0]."' WHERE id = '".$storageInfo->{$storage}->{storageNodeID}."'";
         $sth = $dbh->prepare($sqlStorageUpdate);
         $sth->execute();
-        
+
         if ( $DBI::errstr ) {
             logger("unable to update storage table ",2);
             exit 998;
         }
+        logger("Udate successfully [ ". $storage." ]",7);
     }
 #    my $sth = $dbh->prepare("SELECT DISTINCT id FROM svcVersionBuildID WHERE ( svcVersionID = \"".$verID."\" ) AND ( svcBuildID = \"".$buildID."\" )");
 
